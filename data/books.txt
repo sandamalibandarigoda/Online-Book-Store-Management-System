@@ -1,0 +1,6 @@
+B001|Clean Code|Robert C. Martin|Technology|35.99|4|A handbook of agile software craftsmanship|0.0|0.0
+B002|Harry Potter|J.K. Rowling|Fiction|19.99|24|A young wizard's journey at Hogwarts|0.0|0.0
+B003|Atomic Habits|James Clear|Self-Help|22.5|14|Tiny changes, remarkable results|0.0|0.0
+B004|The Alchemist|Paulo Coelho|Fiction|14.99|20|A journey of self-discovery|0.0|0.0
+B005|Deep Work|Cal Newport|Self-Help|18.0|8|Rules for focused success|0.0|0.0
+B006|Design Patterns|Gang of Four|Technology|45.0|4|Elements of reusable OOP software|0.0|0.0

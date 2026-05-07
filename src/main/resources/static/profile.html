@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile | Bookstore</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+        }
+        .navbar {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 { font-size: 22px; }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+        .avatar {
+            width: 80px;
+            height: 80px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            margin: 0 auto 20px;
+        }
+        .field {
+            margin-bottom: 15px;
+        }
+        .field label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .field input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .field input:read-only {
+            background: #f9f9f9;
+            color: #999;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        .msg {
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+            text-align: center;
+        }
+        .success { background:#d4edda; color:#155724; }
+        .error   { background:#f8d7da; color:#721c24; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <h1>📚 Online Bookstore</h1>
+    <div>
+        <a href="/index.html">🏠 Home</a>
+        <a href="/cart.html">🛒 Cart</a>
+        <a href="/orders.html">📦 Orders</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Profile Info -->
+    <div class="card">
+        <div class="avatar">👤</div>
+        <h2>👤 My Profile</h2>
+        <div class="field">
+            <label>User ID</label>
+            <input type="text"
+                   id="userId"
+                   readonly/>
+        </div>
+        <div class="field">
+            <label>Username</label>
+            <input type="text"
+                   id="username"
+                   readonly/>
+        </div>
+        <div class="field">
+            <label>Role</label>
+            <input type="text"
+                   id="role"
+                   readonly/>
+        </div>
+        <div class="field">
+            <label>Email</label>
+            <input type="email" id="email"/>
+        </div>
+        <div class="field">
+            <label>Full Name</label>
+            <input type="text" id="fullName"/>
+        </div>
+        <div class="field">
+            <label>Phone</label>
+            <input type="text" id="phone"/>
+        </div>
+        <div class="field">
+            <label>Address</label>
+            <input type="text" id="address"/>
+        </div>
+        <button class="btn btn-primary"
+                onclick="updateProfile()">
+            💾 Save Changes
+        </button>
+        <div class="msg" id="profileMsg"></div>
+    </div>
+
+    <!-- Change Password -->
+    <div class="card">
+        <h2>🔒 Change Password</h2>
+        <div class="field">
+            <label>Current Password</label>
+            <input type="password" id="oldPassword"/>
+        </div>
+        <div class="field">
+            <label>New Password</label>
+            <input type="password" id="newPassword"/>
+        </div>
+        <div class="field">
+            <label>Confirm New Password</label>
+            <input type="password" id="confirmPassword"/>
+        </div>
+        <button class="btn btn-danger"
+                onclick="changePassword()">
+            🔑 Change Password
+        </button>
+        <div class="msg" id="passMsg"></div>
+    </div>
+
+</div>
+
+<script>
+    const BASE = 'http://localhost:8080';
+    let currentUser = null;
+
+    window.onload = function() {
+        const stored = localStorage.getItem('user');
+        if (!stored) {
+            window.location.href = '/login.html';
+            return;
+        }
+        currentUser = JSON.parse(stored);
+        loadProfile();
+    };
+
+    async function loadProfile() {
+        const res  = await fetch(
+            BASE + '/api/auth/profile/' +
+            currentUser.userId);
+        const user = await res.json();
+
+        document.getElementById('userId')
+            .value = user.userId;
+        document.getElementById('username')
+            .value = user.username;
+        document.getElementById('role')
+            .value = user.role;
+        document.getElementById('email')
+            .value = user.email || '';
+        document.getElementById('fullName')
+            .value = user.fullName || '';
+        document.getElementById('phone')
+            .value = user.phone || '';
+        document.getElementById('address')
+            .value = user.address || '';
+    }
+
+    async function updateProfile() {
+        const res = await fetch(
+            BASE + '/api/auth/profile/' +
+            currentUser.userId, {
+                method: 'PUT',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({
+                    email    : document.getElementById(
+                        'email').value,
+                    fullName : document.getElementById(
+                        'fullName').value,
+                    phone    : document.getElementById(
+                        'phone').value,
+                    address  : document.getElementById(
+                        'address').value
+                })
+            });
+        const data = await res.json();
+        showMsg('profileMsg',
+            data.message || data.error,
+            res.ok ? 'success' : 'error');
+    }
+
+    async function changePassword() {
+        const oldP  =
+            document.getElementById('oldPassword').value;
+        const newP  =
+            document.getElementById('newPassword').value;
+        const confP =
+            document.getElementById('confirmPassword').value;
+
+        if (newP !== confP) {
+            showMsg('passMsg',
+                'Passwords do not match!', 'error');
+            return;
+        }
+
+        const res = await fetch(
+            BASE + '/api/auth/change-password/' +
+            currentUser.userId, {
+                method: 'PUT',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({
+                    oldPassword: oldP,
+                    newPassword: newP
+                })
+            });
+        const data = await res.json();
+        showMsg('passMsg',
+            data.message || data.error,
+            res.ok ? 'success' : 'error');
+    }
+
+    function showMsg(id, text, type) {
+        const el = document.getElementById(id);
+        el.textContent   = text;
+        el.className     = 'msg ' + type;
+        el.style.display = 'block';
+        setTimeout(() => el.style.display = 'none', 3000);
+    }
+
+    function logout() {
+        localStorage.removeItem('user');
+        window.location.href = '/login.html';
+    }
+</script>
+</body>
+</html>
