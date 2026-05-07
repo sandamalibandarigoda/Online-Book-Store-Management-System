@@ -1,0 +1,2 @@
+e4cace0f|4a22c779|B001|Clean Code|35.99|1|true
+3eba6f1f|4a22c779|B002|Harry Potter|19.99|1|true
