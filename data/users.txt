@@ -1,0 +1,7 @@
+1d41b1f3|john|john@email.com|123456|customer|||
+4a22c779|Charles|jeyathungacharlesphilip0071@gmail.com|Charles@2004|customer|||
+efba7ea1|Philip|charles2004charles2004@gmail.com|Philip@2004|admin|||
+28781889|dsa|dsa123@gmail.com|123|admin|||
+876548fa|qwe|qwe123@gmail.com|123456|admin|||
+db2bca1d|thasa|sthasa01@gmail.com|123456789|admin|||
+2de48163|warna|abs@gmail.com|456456|admin|||

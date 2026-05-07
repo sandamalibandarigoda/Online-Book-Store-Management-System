@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Orders | Bookstore</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+        }
+        .navbar {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 { font-size: 22px; }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .order-id {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .PENDING   { background:#fff3cd; color:#856404; }
+        .CONFIRMED { background:#cce5ff; color:#004085; }
+        .SHIPPED   { background:#d4edda; color:#155724; }
+        .DELIVERED { background:#d1ecf1; color:#0c5460; }
+        .CANCELLED { background:#f8d7da; color:#721c24; }
+        .order-info p {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .order-items {
+            margin: 15px 0;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        .order-items h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 5px 0;
+            color: #555;
+        }
+        .order-total {
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-top: 10px;
+        }
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            position: relative;
+        }
+        .step {
+            text-align: center;
+            font-size: 11px;
+            flex: 1;
+            color: #ccc;
+        }
+        .step.done { color: #27ae60; font-weight: bold; }
+        .step-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ddd;
+            margin: 0 auto 5px;
+        }
+        .step.done .step-dot { background: #27ae60; }
+        .btn-cancel {
+            padding: 8px 16px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .btn-review {
+            padding: 8px 16px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-left: 10px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal.show {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 500px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-content h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+        }
+        .review-books {
+            margin: 20px 0;
+        }
+        .review-book-item {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .review-book-item h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .rating-input {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .star {
+            font-size: 24px;
+            cursor: pointer;
+            color: #ddd;
+        }
+        .star:hover,
+        .star.selected {
+            color: #f39c12;
+        }
+        .comment-input {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            resize: vertical;
+            font-family: Arial, sans-serif;
+        }
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .form-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-submit {
+            background: #27ae60;
+            color: white;
+        }
+        .btn-cancel-modal {
+            background: #e74c3c;
+            color: white;
+        }
+        .empty {
+            text-align: center;
+            color: #999;
+            padding: 60px;
+            font-size: 18px;
+            background: white;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <h1>📚 Online Bookstore</h1>
+    <div>
+        <a href="/index.html">🏠 Home</a>
+        <a href="/cart.html">🛒 Cart</a>
+        <a href="/profile.html">👤 Profile</a>
+        <a href="#" onclick="logout()">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h2 style="margin-bottom:20px; color:#2c3e50">
+        📦 My Orders
+    </h2>
+    <div id="ordersList">
+        <div class="empty">Loading orders...</div>
+    </div>
+</div>
+
+<!-- Review Modal -->
+<div class="modal" id="reviewModal">
+    <div class="modal-content">
+        <h3>⭐ Write a Review</h3>
+        <div class="review-books" id="reviewBooks">
+            <!-- Review items will be populated here -->
+        </div>
+        <div class="form-actions">
+            <button class="btn-cancel-modal" onclick="closeReviewModal()">Cancel</button>
+            <button class="btn-submit" onclick="submitReviews()">Submit Reviews</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const BASE = 'http://localhost:8080';
+    let currentUser = null;
+
+    window.onload = function() {
+        const stored = localStorage.getItem('user');
+        if (!stored) {
+            window.location.href = '/login.html';
+            return;
+        }
+        currentUser = JSON.parse(stored);
+        loadOrders();
+    };
+
+    async function loadOrders() {
+        const res    = await fetch(
+            BASE + '/api/orders/my/' +
+            currentUser.userId);
+        const orders = await res.json();
+        const div    = document.getElementById('ordersList');
+
+        if (!orders.length) {
+            div.innerHTML = `
+                <div class="empty">
+                    No orders yet.
+                    <br><br>
+                    <a href="/index.html"
+                       style="color:#3498db">
+                       Browse Books
+                    </a>
+                </div>`;
+            return;
+        }
+
+        div.innerHTML = orders.map(order => `
+            <div class="order-card">
+                <div class="order-header">
+                    <span class="order-id">
+                        🧾 ${order.orderId}
+                    </span>
+                    <span class="status ${order.status}">
+                        ${order.status}
+                    </span>
+                </div>
+
+                <div class="progress-bar">
+                    ${getProgressBar(order.status)}
+                </div>
+
+                <div class="order-info">
+                    <p>📅 Date: ${order.orderDate}</p>
+                    <p>💳 Payment: ${order.paymentMethod}
+                       [${order.paymentStatus}]</p>
+                    <p>📍 Address:
+                       ${order.shippingAddress}</p>
+                </div>
+
+                <div class="order-items">
+                    <h4>Items Ordered:</h4>
+                    ${order.items.map(item => `
+                        <div class="order-item">
+                            <span>${item.bookTitle}</span>
+                            <span>x${item.quantity} —
+                                LKR ${(item.price *
+            item.quantity)
+            .toFixed(2)}
+                            </span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="order-total">
+                    Total: LKR ${order.totalAmount.toFixed(2)}
+                </div>
+
+                ${order.status === 'PENDING' ||
+        order.status === 'CONFIRMED' ? `
+                    <button class="btn-cancel"
+                        onclick="cancelOrder(
+                            '${order.orderId}')">
+                        ❌ Cancel Order
+                    </button>
+                ` : ''}
+                ${order.status === 'DELIVERED' ? `
+                    <button class="btn-review"
+                        onclick="showReviewModal(
+                            '${order.orderId}',
+                            ${JSON.stringify(order.items).replace(/"/g, '&quot;')})">
+                        ⭐ Write Review
+                    </button>
+                ` : ''}
+            </div>
+        `).join('');
+    }
+
+    function getProgressBar(status) {
+        const steps = [
+            'Pending', 'Confirmed',
+            'Shipped', 'Delivered'];
+        const idx = ['PENDING','CONFIRMED',
+            'SHIPPED','DELIVERED']
+            .indexOf(status);
+        return steps.map((s, i) => `
+            <div class="step ${i <= idx ? 'done' : ''}">
+                <div class="step-dot"></div>
+                ${s}
+            </div>
+        `).join('');
+    }
+
+    async function cancelOrder(orderId) {
+        if (!confirm(
+            'Are you sure you want to cancel this order?'))
+            return;
+
+        const res = await fetch(
+            BASE + '/api/orders/' + orderId + '/cancel', {
+                method: 'PUT',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({
+                    userId: currentUser.userId
+                })
+            });
+        const data = await res.json();
+        alert(data.message || data.error);
+        loadOrders();
+    }
+
+    let currentOrderId = null;
+    let currentOrderItems = [];
+
+    function showReviewModal(orderId, items) {
+        currentOrderId = orderId;
+        currentOrderItems = items;
+        
+        const reviewBooksDiv = document.getElementById('reviewBooks');
+        reviewBooksDiv.innerHTML = items.map(item => `
+            <div class="review-book-item">
+                <h4>${item.bookTitle}</h4>
+                <div class="rating-input" data-book-id="${item.bookId}">
+                    <span class="star" data-rating="1" onclick="setRating('${item.bookId}', 1)">★</span>
+                    <span class="star" data-rating="2" onclick="setRating('${item.bookId}', 2)">★</span>
+                    <span class="star" data-rating="3" onclick="setRating('${item.bookId}', 3)">★</span>
+                    <span class="star" data-rating="4" onclick="setRating('${item.bookId}', 4)">★</span>
+                    <span class="star" data-rating="5" onclick="setRating('${item.bookId}', 5)">★</span>
+                </div>
+                <textarea class="comment-input" 
+                          id="comment_${item.bookId}" 
+                          placeholder="Write your review for ${item.bookTitle}..."></textarea>
+            </div>
+        `).join('');
+        
+        document.getElementById('reviewModal').classList.add('show');
+    }
+
+    function closeReviewModal() {
+        document.getElementById('reviewModal').classList.remove('show');
+        currentOrderId = null;
+        currentOrderItems = [];
+    }
+
+    function setRating(bookId, rating) {
+        const stars = document.querySelectorAll(`.rating-input[data-book-id="${bookId}"] .star`);
+        stars.forEach((star, index) => {
+            if (index < rating) {
+                star.classList.add('selected');
+            } else {
+                star.classList.remove('selected');
+            }
+        });
+    }
+
+    function getRating(bookId) {
+        const selectedStar = document.querySelector(`.rating-input[data-book-id="${bookId}"] .star.selected`);
+        return selectedStar ? selectedStar.getAttribute('data-rating') : 0;
+    }
+
+    async function submitReviews() {
+        const reviews = [];
+        
+        for (const item of currentOrderItems) {
+            const rating = getRating(item.bookId);
+            const comment = document.getElementById(`comment_${item.bookId}`).value;
+            
+            if (rating > 0 && comment.trim()) {
+                reviews.push({
+                    bookId: item.bookId,
+                    rating: parseInt(rating),
+                    comment: comment.trim()
+                });
+            }
+        }
+        
+        if (reviews.length === 0) {
+            alert('Please provide at least one review with rating and comment!');
+            return;
+        }
+        
+        try {
+            const response = await fetch(BASE + '/api/reviews/bulk', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: currentUser.userId,
+                    username: currentUser.username,
+                    orderId: currentOrderId,
+                    reviews: reviews
+                })
+            });
+            
+            const data = await response.json();
+            if (response.ok) {
+                const message = data.message || 'Reviews submitted successfully!';
+                const details = data.totalSuccessful ? 
+                    `\nSuccessful: ${data.totalSuccessful}\nFailed: ${data.totalFailed}` : '';
+                alert(message + details);
+                closeReviewModal();
+                loadOrders(); // Refresh orders to update any UI state
+            } else {
+                alert(data.error || 'Failed to submit reviews');
+            }
+        } catch (error) {
+            console.error('Error submitting reviews:', error);
+            alert('Error submitting reviews. Please try again.');
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('user');
+        window.location.href = '/login.html';
+    }
+</script>
+</body>
+</html>
