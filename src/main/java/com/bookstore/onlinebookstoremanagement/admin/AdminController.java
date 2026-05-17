@@ -1,6 +1,7 @@
 package com.bookstore.onlinebookstoremanagement.admin;
 
 import com.bookstore.onlinebookstoremanagement.models.Book;
+import com.bookstore.onlinebookstoremanagement.models.Order;
 import com.bookstore.onlinebookstoremanagement.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -143,5 +144,51 @@ public class AdminController {
                     Map.of("message", result));
         return ResponseEntity.badRequest()
                 .body(Map.of("error", result));
+    }
+
+    // ─── ORDER MANAGEMENT ────────────────────────────────────
+
+    // GET /api/admin/orders
+    @GetMapping("/orders")
+    public ResponseEntity<List<Order>> getAllOrders() {
+        return ResponseEntity.ok(
+                adminService.getAllOrders());
+    }
+
+    // GET /api/admin/orders/status?status=
+    @GetMapping("/orders/status")
+    public ResponseEntity<List<Order>> getOrdersByStatus(
+            @RequestParam String status) {
+        return ResponseEntity.ok(
+                adminService.getOrdersByStatus(status));
+    }
+
+    // GET /api/admin/orders/user/{userId}
+    @GetMapping("/orders/user/{userId}")
+    public ResponseEntity<List<Order>> getOrdersByUser(
+            @PathVariable String userId) {
+        return ResponseEntity.ok(
+                adminService.getOrdersByUser(userId));
+    }
+
+    // PUT /api/admin/orders/{orderId}/status
+    @PutMapping("/orders/{orderId}/status")
+    public ResponseEntity<Map<String, String>> updateOrderStatus(
+            @PathVariable String orderId,
+            @RequestBody Map<String, String> body) {
+        String result = adminService.updateOrderStatus(
+                orderId, body.get("status"));
+        if (result.startsWith("SUCCESS"))
+            return ResponseEntity.ok(
+                    Map.of("message", result));
+        return ResponseEntity.badRequest()
+                .body(Map.of("error", result));
+    }
+
+    // GET /api/admin/orders/stats
+    @GetMapping("/orders/stats")
+    public ResponseEntity<Map<String, Object>> getOrderStats() {
+        return ResponseEntity.ok(
+                adminService.getOrderStats());
     }
 }
