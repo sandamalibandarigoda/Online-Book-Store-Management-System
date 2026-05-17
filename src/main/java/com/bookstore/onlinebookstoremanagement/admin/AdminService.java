@@ -3,7 +3,9 @@ package com.bookstore.onlinebookstoremanagement.admin;
 import com.bookstore.onlinebookstoremanagement.auth.AuthService;
 import com.bookstore.onlinebookstoremanagement.catalog.BookService;
 import com.bookstore.onlinebookstoremanagement.models.Book;
+import com.bookstore.onlinebookstoremanagement.models.Order;
 import com.bookstore.onlinebookstoremanagement.models.User;
+import com.bookstore.onlinebookstoremanagement.orders.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -21,11 +23,15 @@ public class AdminService {
     @Autowired
     private BookService bookService;
 
+    @Autowired
+    private OrderService orderService;
+
     // ─── DASHBOARD ───────────────────────────────────────────
 
     public Map<String, Object> getDashboard() {
         List<User>   users   = authService.getAllUsers();
         List<Book>   books   = bookService.getAllBooks();
+        List<Order>  orders  = orderService.getAllOrders();
 
         // User stats
         long totalUsers  = users.size();
@@ -48,6 +54,20 @@ public class AdminService {
                         && b.getStock() < 5)
                 .count();
 
+        // Order stats
+        long totalOrders   = orders.size();
+        long pendingOrders = orders.stream()
+                .filter(o -> o.getStatus()
+                        .equals("PENDING")
+                        || o.getStatus()
+                        .equals("CONFIRMED"))
+                .count();
+        double revenue     = orders.stream()
+                .filter(o -> o.getStatus()
+                        .equals("DELIVERED"))
+                .mapToDouble(Order::getTotalAmount)
+                .sum();
+
         // Build dashboard map
         Map<String, Object> dashboard = new HashMap<>();
 
@@ -61,8 +81,15 @@ public class AdminService {
         bookStats.put("outOfStock", outOfStock);
         bookStats.put("lowStock", lowStock);
 
+        Map<String, Object> orderStats = new HashMap<>();
+        orderStats.put("total", totalOrders);
+        orderStats.put("pending", pendingOrders);
+        orderStats.put("revenue",
+                Math.round(revenue * 100.0) / 100.0);
+
         dashboard.put("users", userStats);
         dashboard.put("books", bookStats);
+        dashboard.put("orders", orderStats);
         return dashboard;
     }
 
@@ -159,6 +186,37 @@ public class AdminService {
 
     public String restockBook(String bookId, int qty) {
         return bookService.restockBook(bookId, qty);
+    }
+
+    // ─── ORDER MANAGEMENT ────────────────────────────────────
+
+    public List<Order> getAllOrders() {
+        return orderService.getAllOrders();
+    }
+
+    public List<Order> getOrdersByStatus(String status) {
+        return orderService.getAllOrders().stream()
+                .filter(o -> o.getStatus()
+                        .equalsIgnoreCase(status))
+                .collect(java.util.stream
+                        .Collectors.toList());
+    }
+
+    public List<Order> getOrdersByUser(String userId) {
+        return orderService.getAllOrders().stream()
+                .filter(o -> o.getUserId().equals(userId))
+                .collect(java.util.stream
+                        .Collectors.toList());
+    }
+
+    public String updateOrderStatus(String orderId,
+                                    String status) {
+        return orderService.updateOrderStatus(
+                orderId, status);
+    }
+
+    public Map<String, Object> getOrderStats() {
+        return orderService.getOrderStats();
     }
 
     public String deleteUser(String userId,
