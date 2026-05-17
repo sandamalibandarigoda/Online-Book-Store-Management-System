@@ -127,9 +127,40 @@ public class AuthController {
     // DELETE /api/auth/users/{userId}
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<Map<String, String>> deleteUser(
-            @PathVariable String userId) {
-        String result = authService.deleteUser(userId);
+            @PathVariable String userId,
+            @RequestBody(required = false) Map<String, String> body) {
+        String adminId = (body != null && body.containsKey("adminId")) 
+                ? body.get("adminId") : "";
+        String result = authService.deleteUser(userId, adminId);
         if (result.startsWith("SUCCESS"))
+            return ResponseEntity.ok(
+                    Map.of("message", result));
+        return ResponseEntity.badRequest()
+                .body(Map.of("error", result));
+    }
+
+    // GET /api/auth/users/search?keyword=
+    @GetMapping("/users/search")
+    public ResponseEntity<List<User>> searchUsers(
+            @RequestParam String keyword) {
+        return ResponseEntity.ok(
+                authService.searchUsers(keyword));
+    }
+
+    // GET /api/auth/users/stats
+    @GetMapping("/users/stats")
+    public ResponseEntity<Map<String, Object>> getUserStats() {
+        return ResponseEntity.ok(
+                authService.getUserStats());
+    }
+
+    // PUT /api/auth/users/{userId}/promote
+    @PutMapping("/users/{userId}/promote")
+    public ResponseEntity<Map<String, String>> promoteUser(
+            @PathVariable String userId) {
+        String result = authService.promoteToAdmin(userId);
+        if (result.startsWith("SUCCESS")
+                || result.startsWith("INFO"))
             return ResponseEntity.ok(
                     Map.of("message", result));
         return ResponseEntity.badRequest()

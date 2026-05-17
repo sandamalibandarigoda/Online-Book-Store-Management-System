@@ -3,7 +3,10 @@ package com.bookstore.onlinebookstoremanagement.auth;
 import com.bookstore.onlinebookstoremanagement.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -145,5 +148,69 @@ public class AuthService {
     // Save all users - used by Admin promote feature
     public void saveAllUsers(List<User> users) {
         userFileManager.saveAllUsers(users);
+    }
+
+    // ─── USER MANAGEMENT CRUD OPERATIONS ─────────────────────
+
+    public List<User> searchUsers(String keyword) {
+        List<User> result = new ArrayList<>();
+        for (User u : userFileManager.loadAllUsers()) {
+            if (u.getUsername().toLowerCase()
+                    .contains(keyword.toLowerCase())
+                    || u.getEmail().toLowerCase()
+                    .contains(keyword.toLowerCase())) {
+                u.setPassword(null);
+                result.add(u);
+            }
+        }
+        return result;
+    }
+
+    public String promoteToAdmin(String userId) {
+        List<User> users = userFileManager.loadAllUsers();
+        for (User u : users) {
+            if (u.getUserId().equals(userId)) {
+                if (u.getRole().equalsIgnoreCase("admin"))
+                    return "INFO: User is already an admin.";
+                User updated = new User(
+                        u.getUserId(),
+                        u.getUsername(),
+                        u.getEmail(),
+                        u.getPassword(),
+                        "admin");
+                updated.setFullName(u.getFullName());
+                updated.setAddress(u.getAddress());
+                updated.setPhone(u.getPhone());
+                users.set(users.indexOf(u), updated);
+                userFileManager.saveAllUsers(users);
+                return "SUCCESS: " + u.getUsername()
+                        + " promoted to Admin.";
+            }
+        }
+        return "ERROR: User not found.";
+    }
+
+    public Map<String, Object> getUserStats() {
+        List<User> users = userFileManager.loadAllUsers();
+        long admins = users.stream()
+                .filter(u -> u.getRole()
+                        .equalsIgnoreCase("admin"))
+                .count();
+        long customers = users.stream()
+                .filter(u -> u.getRole()
+                        .equalsIgnoreCase("customer"))
+                .count();
+
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("totalUsers", users.size());
+        stats.put("admins", admins);
+        stats.put("customers", customers);
+        return stats;
+    }
+
+    public String deleteUser(String userId, String adminId) {
+        if (userId.equals(adminId))
+            return "ERROR: Cannot delete your own account.";
+        return deleteUser(userId);
     }
 }
