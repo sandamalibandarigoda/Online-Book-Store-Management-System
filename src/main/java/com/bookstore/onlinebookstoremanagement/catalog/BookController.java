@@ -30,7 +30,7 @@ public class BookController {
     // ── GET /api/books/{bookId} ──────────────────────────────
     @GetMapping("/{bookId}")
     public ResponseEntity<?> getBookById(
-            @PathVariable String bookId) {
+            @PathVariable("bookId") String bookId) {
         Book book = bookService.getBookById(bookId);
         if (book != null)
             return ResponseEntity.ok(book);
@@ -41,7 +41,7 @@ public class BookController {
     // ── GET /api/books/search/title?keyword= ────────────────
     @GetMapping("/search/title")
     public ResponseEntity<List<Book>> searchByTitle(
-            @RequestParam String keyword) {
+            @RequestParam("keyword") String keyword) {
         return ResponseEntity.ok(
                 bookService.searchByTitle(keyword));
     }
@@ -49,7 +49,7 @@ public class BookController {
     // ── GET /api/books/search/author?keyword= ───────────────
     @GetMapping("/search/author")
     public ResponseEntity<List<Book>> searchByAuthor(
-            @RequestParam String keyword) {
+            @RequestParam("keyword") String keyword) {
         return ResponseEntity.ok(
                 bookService.searchByAuthor(keyword));
     }
@@ -57,7 +57,7 @@ public class BookController {
     // ── GET /api/books/category?name= ───────────────────────
     @GetMapping("/category")
     public ResponseEntity<List<Book>> filterByCategory(
-            @RequestParam String name) {
+            @RequestParam("name") String name) {
         return ResponseEntity.ok(
                 bookService.filterByCategory(name));
     }
@@ -65,7 +65,7 @@ public class BookController {
     // ── GET /api/books/price?max= ────────────────────────────
     @GetMapping("/price")
     public ResponseEntity<List<Book>> filterByMaxPrice(
-            @RequestParam double max) {
+            @RequestParam("max") double max) {
         return ResponseEntity.ok(
                 bookService.filterByMaxPrice(max));
     }
@@ -112,7 +112,7 @@ public class BookController {
     // ── PUT /api/books/{bookId} (admin) ──────────────────────
     @PutMapping("/{bookId}")
     public ResponseEntity<Map<String, String>> editBook(
-            @PathVariable String bookId,
+            @PathVariable("bookId") String bookId,
             @RequestBody Book book) {
         String result = bookService.editBook(bookId, book);
         if (result.startsWith("SUCCESS"))
@@ -125,7 +125,7 @@ public class BookController {
     // ── DELETE /api/books/{bookId} (admin) ───────────────────
     @DeleteMapping("/{bookId}")
     public ResponseEntity<Map<String, String>> deleteBook(
-            @PathVariable String bookId) {
+            @PathVariable("bookId") String bookId) {
         String result = bookService.deleteBook(bookId);
         if (result.startsWith("SUCCESS"))
             return ResponseEntity.ok(
@@ -137,7 +137,7 @@ public class BookController {
     // ── PUT /api/books/{bookId}/restock (admin) ──────────────
     @PutMapping("/{bookId}/restock")
     public ResponseEntity<Map<String, String>> restockBook(
-            @PathVariable String bookId,
+            @PathVariable("bookId") String bookId,
             @RequestBody Map<String, Integer> body) {
         String result = bookService.restockBook(
                 bookId, body.get("quantity"));
