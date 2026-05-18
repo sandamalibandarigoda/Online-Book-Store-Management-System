@@ -2,6 +2,7 @@ package com.bookstore.onlinebookstoremanagement.admin;
 
 import com.bookstore.onlinebookstoremanagement.models.Book;
 import com.bookstore.onlinebookstoremanagement.models.Order;
+import com.bookstore.onlinebookstoremanagement.models.Review;
 import com.bookstore.onlinebookstoremanagement.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -190,5 +191,34 @@ public class AdminController {
     public ResponseEntity<Map<String, Object>> getOrderStats() {
         return ResponseEntity.ok(
                 adminService.getOrderStats());
+    }
+
+    // ─── REVIEW MANAGEMENT ───────────────────────────────────
+
+    // GET /api/admin/reviews
+    @GetMapping("/reviews")
+    public ResponseEntity<List<Review>> getAllReviews() {
+        return ResponseEntity.ok(
+                adminService.getAllReviews());
+    }
+
+    // GET /api/admin/reviews/book/{bookId}
+    @GetMapping("/reviews/book/{bookId}")
+    public ResponseEntity<List<Review>> getReviewsByBook(
+            @PathVariable String bookId) {
+        return ResponseEntity.ok(
+                adminService.getReviewsByBook(bookId));
+    }
+
+    // DELETE /api/admin/reviews/{reviewId}
+    @DeleteMapping("/reviews/{reviewId}")
+    public ResponseEntity<Map<String, String>> deleteReview(
+            @PathVariable String reviewId) {
+        String result = adminService.deleteReview(reviewId);
+        if (result.startsWith("SUCCESS"))
+            return ResponseEntity.ok(
+                    Map.of("message", result));
+        return ResponseEntity.badRequest()
+                .body(Map.of("error", result));
     }
 }

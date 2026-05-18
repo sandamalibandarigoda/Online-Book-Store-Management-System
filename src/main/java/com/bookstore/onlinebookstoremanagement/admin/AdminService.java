@@ -4,8 +4,10 @@ import com.bookstore.onlinebookstoremanagement.auth.AuthService;
 import com.bookstore.onlinebookstoremanagement.catalog.BookService;
 import com.bookstore.onlinebookstoremanagement.models.Book;
 import com.bookstore.onlinebookstoremanagement.models.Order;
+import com.bookstore.onlinebookstoremanagement.models.Review;
 import com.bookstore.onlinebookstoremanagement.models.User;
 import com.bookstore.onlinebookstoremanagement.orders.OrderService;
+import com.bookstore.onlinebookstoremanagement.reviews.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -26,12 +28,16 @@ public class AdminService {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private ReviewService reviewService;
+
     // ─── DASHBOARD ───────────────────────────────────────────
 
     public Map<String, Object> getDashboard() {
         List<User>   users   = authService.getAllUsers();
         List<Book>   books   = bookService.getAllBooks();
         List<Order>  orders  = orderService.getAllOrders();
+        List<Review> reviews = reviewService.getAllReviews();
 
         // User stats
         long totalUsers  = users.size();
@@ -68,6 +74,9 @@ public class AdminService {
                 .mapToDouble(Order::getTotalAmount)
                 .sum();
 
+        // Review stats
+        long totalReviews = reviews.size();
+
         // Build dashboard map
         Map<String, Object> dashboard = new HashMap<>();
 
@@ -87,9 +96,13 @@ public class AdminService {
         orderStats.put("revenue",
                 Math.round(revenue * 100.0) / 100.0);
 
+        Map<String, Object> reviewStats = new HashMap<>();
+        reviewStats.put("total", totalReviews);
+
         dashboard.put("users", userStats);
         dashboard.put("books", bookStats);
         dashboard.put("orders", orderStats);
+        dashboard.put("reviews", reviewStats);
         return dashboard;
     }
 
@@ -217,6 +230,21 @@ public class AdminService {
 
     public Map<String, Object> getOrderStats() {
         return orderService.getOrderStats();
+    }
+
+    // ─── REVIEW MANAGEMENT ───────────────────────────────────
+
+    public List<Review> getAllReviews() {
+        return reviewService.getAllReviews();
+    }
+
+    public List<Review> getReviewsByBook(String bookId) {
+        return reviewService.getReviewsByBook(bookId);
+    }
+
+    public String deleteReview(String reviewId) {
+        return reviewService.deleteReview(
+                reviewId, "", true);
     }
 
     public String deleteUser(String userId,
