@@ -164,17 +164,17 @@
             background: #e74c3c;
             color: white;
         }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
 <nav class="navbar">
-    <h1>📚 Online Bookstore</h1>
+    <h1><i class="fa-solid fa-book"></i> Online Bookstore</h1>
     <div>
-        <a href="/index.html">🏠 Home</a>
-        <a href="/orders.html">📦 Orders</a>
-        <a href="/profile.html">👤 Profile</a>
-        <a href="#" onclick="logout()">Logout</a>
+        <a href="/index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="/orders.html"><i class="fa-solid fa-box"></i> Orders</a>
+        <a href="/profile.html"><i class="fa-solid fa-user"></i> Profile</a>
+        <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
     </div>
 </nav>
 
@@ -182,24 +182,24 @@
     <div class="tabs">
         <button class="tab active"
                 onclick="showTab('cart')">
-            🛒 My Cart
+            <i class="fa-solid fa-cart-shopping"></i> My Cart
         </button>
         <button class="tab"
                 onclick="showTab('wishlist')">
-            ❤️ Wishlist
+            <i class="fa-solid fa-heart"></i> Wishlist
         </button>
     </div>
 
     <!-- Cart Section -->
     <div id="cartSection" class="section">
-        <h2 style="margin-bottom:20px">🛒 My Cart</h2>
+        <h2 style="margin-bottom:20px"><i class="fa-solid fa-cart-shopping"></i> My Cart</h2>
         <div id="cartItems">
             <div class="empty">Loading cart...</div>
         </div>
         <div class="total" id="cartTotal"></div>
         <button class="btn-order"
                 onclick="showCheckout()">
-            ✅ Proceed to Checkout
+            <i class="fa-solid fa-circle-check"></i> Proceed to Checkout
         </button>
     </div>
 
@@ -207,7 +207,7 @@
     <div id="wishlistSection"
          class="section"
          style="display:none">
-        <h2 style="margin-bottom:20px">❤️ My Wishlist</h2>
+        <h2 style="margin-bottom:20px"><i class="fa-solid fa-heart"></i> My Wishlist</h2>
         <div id="wishlistItems">
             <div class="empty">Loading wishlist...</div>
         </div>
@@ -217,16 +217,16 @@
 <!-- Checkout Modal -->
 <div class="modal" id="checkoutModal">
     <div class="modal-box">
-        <h3>📦 Checkout</h3>
+        <h3><i class="fa-solid fa-box"></i> Checkout</h3>
         <input type="text"
                id="shippingAddress"
                placeholder="Shipping Address"/>
         <select id="paymentMethod">
             <option value="CASH_ON_DELIVERY">
-                💵 Cash on Delivery
+                Cash on Delivery (COD)
             </option>
         </select>
-                <div class="modal-btns">
+        <div class="modal-btns">
             <button class="btn-confirm"
                     onclick="placeOrder()">
                 Place Order

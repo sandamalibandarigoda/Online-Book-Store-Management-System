@@ -99,17 +99,17 @@
         }
         .success { background:#d4edda; color:#155724; }
         .error   { background:#f8d7da; color:#721c24; }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
 <nav class="navbar">
-    <h1>📚 Online Bookstore</h1>
+    <h1><i class="fa-solid fa-book"></i> Online Bookstore</h1>
     <div>
-        <a href="/index.html">🏠 Home</a>
-        <a href="/cart.html">🛒 Cart</a>
-        <a href="/orders.html">📦 Orders</a>
-        <a href="#" onclick="logout()">Logout</a>
+        <a href="/index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="/cart.html"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+        <a href="/orders.html"><i class="fa-solid fa-box"></i> Orders</a>
+        <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
     </div>
 </nav>
 
@@ -117,8 +117,8 @@
 
     <!-- Profile Info -->
     <div class="card">
-        <div class="avatar">👤</div>
-        <h2>👤 My Profile</h2>
+        <div class="avatar"><i class="fa-solid fa-user"></i></div>
+        <h2><i class="fa-solid fa-user-gear"></i> My Profile</h2>
         <div class="field">
             <label>User ID</label>
             <input type="text"
@@ -155,14 +155,14 @@
         </div>
         <button class="btn btn-primary"
                 onclick="updateProfile()">
-            💾 Save Changes
+            <i class="fa-solid fa-floppy-disk"></i> Save Changes
         </button>
         <div class="msg" id="profileMsg"></div>
     </div>
 
     <!-- Change Password -->
     <div class="card">
-        <h2>🔒 Change Password</h2>
+        <h2><i class="fa-solid fa-lock"></i> Change Password</h2>
         <div class="field">
             <label>Current Password</label>
             <input type="password" id="oldPassword"/>
@@ -177,7 +177,7 @@
         </div>
         <button class="btn btn-danger"
                 onclick="changePassword()">
-            🔑 Change Password
+            <i class="fa-solid fa-key"></i> Change Password
         </button>
         <div class="msg" id="passMsg"></div>
     </div>

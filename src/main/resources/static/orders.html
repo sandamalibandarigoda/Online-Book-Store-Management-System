@@ -221,23 +221,23 @@
             background: white;
             border-radius: 12px;
         }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
 <nav class="navbar">
-    <h1>📚 Online Bookstore</h1>
+    <h1><i class="fa-solid fa-book"></i> Online Bookstore</h1>
     <div>
-        <a href="/index.html">🏠 Home</a>
-        <a href="/cart.html">🛒 Cart</a>
-        <a href="/profile.html">👤 Profile</a>
-        <a href="#" onclick="logout()">Logout</a>
+        <a href="/index.html"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="/cart.html"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+        <a href="/profile.html"><i class="fa-solid fa-user"></i> Profile</a>
+        <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
     </div>
 </nav>
 
 <div class="container">
     <h2 style="margin-bottom:20px; color:#2c3e50">
-        📦 My Orders
+        <i class="fa-solid fa-box"></i> My Orders
     </h2>
     <div id="ordersList">
         <div class="empty">Loading orders...</div>
@@ -247,7 +247,7 @@
 <!-- Review Modal -->
 <div class="modal" id="reviewModal">
     <div class="modal-content">
-        <h3>⭐ Write a Review</h3>
+        <h3><i class="fa-solid fa-star"></i> Write a Review</h3>
         <div class="review-books" id="reviewBooks">
             <!-- Review items will be populated here -->
         </div>
@@ -296,7 +296,7 @@
             <div class="order-card">
                 <div class="order-header">
                     <span class="order-id">
-                        🧾 ${order.orderId}
+                        <i class="fa-solid fa-file-invoice"></i> ${order.orderId}
                     </span>
                     <span class="status ${order.status}">
                         ${order.status}
@@ -308,10 +308,10 @@
                 </div>
 
                 <div class="order-info">
-                    <p>📅 Date: ${order.orderDate}</p>
-                    <p>💳 Payment: ${order.paymentMethod}
+                    <p><i class="fa-solid fa-calendar-days"></i> Date: ${order.orderDate}</p>
+                    <p><i class="fa-solid fa-credit-card"></i> Payment: ${order.paymentMethod}
                        [${order.paymentStatus}]</p>
-                    <p>📍 Address:
+                    <p><i class="fa-solid fa-map-pin"></i> Address:
                        ${order.shippingAddress}</p>
                 </div>
 
@@ -338,7 +338,7 @@
                     <button class="btn-cancel"
                         onclick="cancelOrder(
                             '${order.orderId}')">
-                        ❌ Cancel Order
+                        <i class="fa-solid fa-circle-xmark"></i> Cancel Order
                     </button>
                 ` : ''}
                 ${order.status === 'DELIVERED' ? `
@@ -346,7 +346,7 @@
                         onclick="showReviewModal(
                             '${order.orderId}',
                             ${JSON.stringify(order.items).replace(/"/g, '&quot;')})">
-                        ⭐ Write Review
+                        <i class="fa-solid fa-star"></i> Write Review
                     </button>
                 ` : ''}
             </div>

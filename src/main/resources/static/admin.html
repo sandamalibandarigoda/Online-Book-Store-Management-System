@@ -123,14 +123,15 @@
             font-size: 12px;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
 <nav class="navbar">
-    <h1>⚙️ Admin Dashboard</h1>
+    <h1><i class="fa-solid fa-gear"></i> Admin Dashboard</h1>
     <div>
-        <a href="/index.html">🏠 Store</a>
-        <a href="#" onclick="logout()">Logout</a>
+        <a href="/index.html"><i class="fa-solid fa-store"></i> Store</a>
+        <a href="#" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
     </div>
 </nav>
 
@@ -139,19 +140,19 @@
     <!-- Stats -->
     <div class="stats">
         <div class="stat-card blue">
-            <h3>📚 Total Books</h3>
+            <h3><i class="fa-solid fa-book"></i> Total Books</h3>
             <div class="num" id="statBooks">-</div>
         </div>
         <div class="stat-card green">
-            <h3>👥 Total Users</h3>
+            <h3><i class="fa-solid fa-users"></i> Total Users</h3>
             <div class="num" id="statUsers">-</div>
         </div>
         <div class="stat-card orange">
-            <h3>📦 Total Orders</h3>
+            <h3><i class="fa-solid fa-box"></i> Total Orders</h3>
             <div class="num" id="statOrders">-</div>
         </div>
         <div class="stat-card purple">
-            <h3>💰 Revenue</h3>
+            <h3><i class="fa-solid fa-sack-dollar"></i> Revenue</h3>
             <div class="num"
                  id="statRevenue"
                  style="font-size:24px">-</div>
@@ -162,28 +163,28 @@
     <div class="tabs">
         <button class="tab active"
                 onclick="showSection('books')">
-            📚 Books
+            <i class="fa-solid fa-book"></i> Books
         </button>
         <button class="tab"
                 onclick="showSection('users')">
-            👥 Users
+            <i class="fa-solid fa-users"></i> Users
         </button>
         <button class="tab"
                 onclick="showSection('orders')">
-            📦 Orders
+            <i class="fa-solid fa-box"></i> Orders
         </button>
         <button class="tab"
                 onclick="showSection('reviews')">
-            ⭐ Reviews
+            <i class="fa-solid fa-star"></i> Reviews
         </button>
     </div>
 
     <!-- Books Section -->
     <div id="sec_books" class="section">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom:15px;">
-            <h2>📚 All Books</h2>
+            <h2><i class="fa-solid fa-book"></i> All Books</h2>
             <button class="btn-edit" onclick="showAddBookModal()" style="padding: 8px 16px; font-size: 14px;">
-                ➕ Add New Book
+                <i class="fa-solid fa-plus"></i> Add New Book
             </button>
         </div>
         <table>
@@ -208,13 +209,13 @@
          class="section"
          style="display:none">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom:15px;">
-            <h2>👥 All Users</h2>
+            <h2><i class="fa-solid fa-users"></i> All Users</h2>
             <div>
                 <button class="btn-edit" onclick="showUserStats()" style="padding: 8px 16px; font-size: 14px; margin-right: 10px;">
-                    📊 User Stats
+                    <i class="fa-solid fa-chart-simple"></i> User Stats
                 </button>
                 <button class="btn-promote" onclick="exportUsers()" style="padding: 8px 16px; font-size: 14px;">
-                    📥 Export Users
+                    <i class="fa-solid fa-download"></i> Export Users
                 </button>
             </div>
         </div>
@@ -237,7 +238,7 @@
     <div id="sec_orders"
          class="section"
          style="display:none">
-        <h2 style="margin-bottom:15px">📦 All Orders</h2>
+        <h2 style="margin-bottom:15px"><i class="fa-solid fa-box"></i> All Orders</h2>
         <table>
             <thead>
             <tr>
@@ -257,7 +258,7 @@
     <div id="sec_reviews"
          class="section"
          style="display:none">
-        <h2 style="margin-bottom:15px">⭐ All Reviews</h2>
+        <h2 style="margin-bottom:15px"><i class="fa-solid fa-star"></i> All Reviews</h2>
         <table>
             <thead>
             <tr>
@@ -338,7 +339,7 @@
             <tr>
                 <td>${b.bookId}</td>
                 <td>
-                    ${b.imageUrl ? `<img src="${b.imageUrl}" alt="${b.title}" style="width: 40px; height: 50px; object-fit: cover; border-radius: 4px;">` : '📚'}
+                    ${b.imageUrl ? `<img src="${b.imageUrl}" alt="${b.title}" style="width: 40px; height: 50px; object-fit: cover; border-radius: 4px;">` : '<i class="fa-solid fa-book"></i>'}
                     ${b.title}
                 </td>
                 <td>${b.author}</td>
@@ -512,7 +513,7 @@
         modal.className = 'modal';
         modal.innerHTML = `
             <div class="modal-content">
-                <h3>➕ Add New Book</h3>
+                <h3><i class="fa-solid fa-plus"></i> Add New Book</h3>
                 <form id="addBookForm">
                     <div class="form-group">
                         <label>Book ID:</label>
@@ -612,7 +613,7 @@
         modal.className = 'modal';
         modal.innerHTML = `
             <div class="modal-content">
-                <h3>✏️ Edit Book</h3>
+                <h3><i class="fa-solid fa-pen-to-square"></i> Edit Book</h3>
                 <form id="editBookForm">
                     <div class="form-group">
                         <label>Book ID:</label>
@@ -729,7 +730,7 @@
         modal.className = 'modal';
         modal.innerHTML = `
             <div class="modal-content">
-                <h3>👤 User Details</h3>
+                <h3><i class="fa-solid fa-user"></i> User Details</h3>
                 <div class="user-details">
                     <div class="detail-row">
                         <label>User ID:</label>
@@ -771,7 +772,7 @@
         modal.className = 'modal';
         modal.innerHTML = `
             <div class="modal-content">
-                <h3>📊 User Statistics</h3>
+                <h3><i class="fa-solid fa-chart-simple"></i> User Statistics</h3>
                 <div id="userStatsContent">
                     <p>Loading user statistics...</p>
                 </div>
